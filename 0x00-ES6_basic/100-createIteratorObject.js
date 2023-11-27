@@ -1,11 +1,6 @@
 export default function createIteratorObject(report) {
-  const departments = Object.values(report);
-  const employees = [];
-
-  for (const department of departments) {
-    employees.push(...department);
-  }
-
+  const departments = Object.values(report.allEmployees);
+  const employees = departments.reduce((acc, department) => [...acc, ...department], []);
   let currentIndex = 0;
 
   return {
