@@ -64,3 +64,15 @@ function executeWork(employee: Director | Teacher) {
         employee.workTeacherTasks();
     }
 }
+
+// Define the Subjects type
+type Subjects = "Math" | "History";
+
+// Define the teachClass function
+function teachClass(todayClass: Subjects): string {
+  if (todayClass === "Math") {
+    return "Teaching Math";
+  } else {
+    return "Teaching History";
+  }
+}
