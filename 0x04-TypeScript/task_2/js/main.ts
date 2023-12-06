@@ -50,3 +50,17 @@ function createEmployee(salary: number | string): Director | Teacher {
         return new Director();
     }
 }
+
+// Define the isDirector function as a type predicate
+function isDirector(employee: Director | Teacher): employee is Director {
+    return (employee as Director).workDirectorTasks !== undefined;
+}
+
+// Define the executeWork function
+function executeWork(employee: Director | Teacher) {
+    if (isDirector(employee)) {
+        employee.workDirectorTasks();
+    } else {
+        employee.workTeacherTasks();
+    }
+}
