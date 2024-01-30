@@ -50,9 +50,9 @@ const app = http.createServer(async (req, res) => {
   if (req.url === '/') {
     res.end('Hello Holberton School!');
   } else if (req.url === '/students') {
+    res.write('This is the list of our students\n');
     try {
       countStudents(process.argv[2].toString()).then((output) => {
-        res.write('This is the list of our students\n');
         const content = output.slice(0, -1);
         res.end(content);
       }).catch(() => {
