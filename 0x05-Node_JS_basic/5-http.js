@@ -34,7 +34,8 @@ function countStudents(path) {
 
         for (const [key, value] of Object.entries(fields)) {
           if (key !== 'field') {
-            output += `Number of students in ${key}: ${value}. List: ${students[key].join(', ')} \n`;
+            output += `Number of students in ${key}: ${value}. `;
+            output += `List: ${students[key].join(', ')}\n`;
           }
         }
         resolve(output);
@@ -44,18 +45,24 @@ function countStudents(path) {
 }
 
 const app = http.createServer(async (req, res) => {
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
-
+  res.statusCode = 200;
+  res.setHeader('Content-Type', 'text/plain');
   if (req.url === '/') {
     res.end('Hello Holberton School!');
   } else if (req.url === '/students') {
-    countStudents(process.argv[2].toString()).then((output) => {
-      const content = output.slice(0, -1);
-      res.end(`This is the list of our students\n${content}`);
-    }).catch(() => {
+    try {
+      countStudents(process.argv[2].toString()).then((output) => {
+        res.write('This is the list of our students\n');
+        const content = output.slice(0, -1);
+        res.end(content);
+      }).catch(() => {
+        res.statusCode = 404;
+        res.end('Cannot load the database');
+      });
+    } catch (error) {
       res.statusCode = 404;
       res.end('Cannot load the database');
-    });
+    }
   }
 });
 
