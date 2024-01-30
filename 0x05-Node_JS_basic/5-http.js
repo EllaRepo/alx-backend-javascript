@@ -48,7 +48,8 @@ const app = http.createServer(async (req, res) => {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/plain');
   if (req.url === '/') {
-    res.end('Hello Holberton School!');
+    response.write('Hello Holberton School!');
+    response.end();
   }
   if (req.url === '/students') {
     res.write('This is the list of our students\n');
