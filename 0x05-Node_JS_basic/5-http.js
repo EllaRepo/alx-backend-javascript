@@ -1,37 +1,38 @@
 const http = require('http');
-const fs = require('fs');
+const { readFile } = require('fs');
 
 const hostname = 'localhost';
 const port = 1245;
 
-function countStudents(path) {
+function countStudents(fileName) {
+  const students = {};
+  const fields = {};
+  let length = 0;
   return new Promise((resolve, reject) => {
-    fs.readFile(path, 'utf8', (err, data) => {
+    readFile(fileName, (err, data) => {
       if (err) {
         reject(err);
       } else {
-        const lines = data.trim().split('\n');
-        const students = {};
-        const fields = {};
         let output = '';
-
-        for (const line of lines) {
-          if (line) {
-            const row = line.split(',');
-
-            if (row[3] in students) {
-              students[row[3]].push(row[0]);
+        const lines = data.toString().split('\n');
+        for (let i = 0; i < lines.length; i += 1) {
+          if (lines[i]) {
+            length += 1;
+            const field = lines[i].toString().split(',');
+            if (Object.prototype.hasOwnProperty.call(students, field[3])) {
+              students[field[3]].push(field[0]);
             } else {
-              students[row[3]] = [row[0]];
+              students[field[3]] = [field[0]];
             }
-
-            fields[row[3]] = (fields[row[3]] || 0) + 1;
+            if (Object.prototype.hasOwnProperty.call(fields, field[3])) {
+              fields[field[3]] += 1;
+            } else {
+              fields[field[3]] = 1;
+            }
           }
         }
-
-        const totalStudents = lines.length - 1;
-        output += `Number of students: ${totalStudents} \n`;
-
+        const l = length - 1;
+        output += `Number of students: ${l}\n`;
         for (const [key, value] of Object.entries(fields)) {
           if (key !== 'field') {
             output += `Number of students in ${key}: ${value}. `;
@@ -44,18 +45,18 @@ function countStudents(path) {
   });
 }
 
-const app = http.createServer(async (req, res) => {
+const app = http.createServer((req, res) => {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/plain');
   if (req.url === '/') {
-    response.write('Hello Holberton School!');
-    response.end();
+    res.write('Hello Holberton School!');
+    res.end();
   }
   if (req.url === '/students') {
     res.write('This is the list of our students\n');
     countStudents(process.argv[2].toString()).then((output) => {
-      const content = output.slice(0, -1);
-      res.end(content);
+      const outString = output.slice(0, -1);
+      res.end(outString);
     }).catch(() => {
       res.statusCode = 404;
       res.end('Cannot load the database');
