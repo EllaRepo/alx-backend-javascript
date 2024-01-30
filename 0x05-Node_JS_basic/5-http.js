@@ -49,20 +49,16 @@ const app = http.createServer(async (req, res) => {
   res.setHeader('Content-Type', 'text/plain');
   if (req.url === '/') {
     res.end('Hello Holberton School!');
-  } else if (req.url === '/students') {
+  }
+  if (req.url === '/students') {
     res.write('This is the list of our students\n');
-    try {
-      countStudents(process.argv[2].toString()).then((output) => {
-        const content = output.slice(0, -1);
-        res.end(content);
-      }).catch(() => {
-        res.statusCode = 404;
-        res.end('Cannot load the database');
-      });
-    } catch (error) {
+    countStudents(process.argv[2].toString()).then((output) => {
+      const content = output.slice(0, -1);
+      res.end(content);
+    }).catch(() => {
       res.statusCode = 404;
       res.end('Cannot load the database');
-    }
+    });
   }
 });
 
