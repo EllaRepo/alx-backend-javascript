@@ -11,23 +11,23 @@ app.get('/cart/:id([0-9]+)', (req, res) => {
   res.send(`Payment methods for cart ${req.params.id}`);
 });
 
-app.get('/available_payments', (request, response) => {
-  response.set('Content-Type', 'application/json');
+app.get('/available_payments', (req, res) => {
+  res.set('Content-Type', 'application/json');
   const payMethods = {
     payment_methods: {
       credit_cards: true,
       paypal: false,
     },
   };
-  response.send(payMethods);
+  res.send(payMethods);
 });
 
-app.post('/login', (request, response) => {
-  const { userName } = request.body;
+app.post('/login', (req, res) => {
+  const { userName } = req.body;
   if (userName) {
-    response.send(`Welcome ${userName}`);
+    res.send(`Welcome ${userName}`);
   } else {
-    response.status(404).send();
+    res.status(404).send();
   }
 });
 
